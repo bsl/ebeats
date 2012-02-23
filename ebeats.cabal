@@ -1,9 +1,9 @@
 name:         ebeats
-version:      0.0.1
+version:      0.1.0
 category:     Time
 synopsis:     Time in ebeats
 description:  Time in ebeats. See <http://ebeats.org/>.
-author:       Brian Lewis <brian@lorf.org>, Ian Taylor <ian@lorf.org>
+author:       Brian Lewis <brian@lorf.org>, Ian Taylor <ian@lorf.org>, Tom Murphy <amindfv@gmail.com>
 maintainer:   Brian Lewis <brian@lorf.org>, Ian Taylor <ian@lorf.org>
 license:      BSD3
 license-file: LICENSE
