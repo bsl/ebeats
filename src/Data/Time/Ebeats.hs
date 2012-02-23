@@ -37,7 +37,7 @@ instance Show Ebeats where
   show = ('@':) . show . ebeatsTimeValue
 
 instance Show EbeatsTime where
-  show ebeatsTime = (show y) ++ "-" ++ (show m) ++ "m-" ++ (show d) ++ "d " ++ (show $ ebeats ebeatsTime) where
+  show ebeatsTime = show y ++ "-" ++ show m ++ "m-" ++ show d ++ "d " ++ show (ebeats ebeatsTime) where
     (y,m,d) = toGregorian $ ModifiedJulianDay $ days ebeatsTime
 
 getEbeats :: IO Ebeats
@@ -85,7 +85,7 @@ instance Num Ebeats where
     (Ebeats a) + (Ebeats b) =  Ebeats (a + b)
     (Ebeats a) - (Ebeats b) =  Ebeats (a - b)
     (Ebeats a) * (Ebeats b) =  Ebeats (a * b) -- No real significance. Just for typeclass-completeness.
-    negate (Ebeats a)       =  Ebeats (0 - a)
+    negate (Ebeats a)       =  Ebeats (negate a)
     abs (Ebeats a)          =  Ebeats (abs a)
     signum (Ebeats a)       =  Ebeats (signum a) -- Kind of nonsensical return value
     fromInteger an_int      =  Ebeats (fromInteger an_int)
