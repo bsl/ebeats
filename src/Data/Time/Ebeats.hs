@@ -28,22 +28,22 @@ import  Data.Time.Calendar  (toGregorian, Day(ModifiedJulianDay), toModifiedJuli
 
 newtype Ebeats = Ebeats { ebeatsTimeValue :: Fixed E2 }
   deriving (Eq, Ord)
-  
+
 data EbeatsTime = EbeatsTime { days   :: Integer      -- ^ Modified Julian Day, but not typed as such so that we can define a different "show"
                              , ebeats :: Ebeats }
   deriving (Eq, Ord)
 
 instance Show Ebeats where
   show = ('@':) . show . ebeatsTimeValue
-  
+
 instance Show EbeatsTime where
   show ebeatsTime = (show y) ++ "-" ++ (show m) ++ "m-" ++ (show d) ++ "d " ++ (show $ ebeats ebeatsTime) where
-	(y,m,d) = toGregorian $ ModifiedJulianDay $ days ebeatsTime
+    (y,m,d) = toGregorian $ ModifiedJulianDay $ days ebeatsTime
 
 getEbeats :: IO Ebeats
 getEbeats = toEbeats `fmap` getCurrentTime
 
--- Can you spot the difference in coding styles?:   
+-- Can you spot the difference in coding styles?:
 getEbeatsTime :: IO EbeatsTime
 getEbeatsTime = do ebeats <- getEbeats
                    now <- getCurrentTime
@@ -56,7 +56,7 @@ toEbeats utct =
     let TimeOfDay h m s = timeToTimeOfDay $ utctDayTime utct
         !ebeats         = realToFrac $ s * 5/432 + realToFrac m * 25/36 + realToFrac h * 125/3
     in Ebeats ebeats
-    
+
 toEbeatsTime :: UTCTime -> EbeatsTime
 toEbeatsTime utct =
     let TimeOfDay h m s = timeToTimeOfDay $ utctDayTime utct
@@ -64,19 +64,19 @@ toEbeatsTime utct =
         day             = toModifiedJulianDay $ utctDay utct
     in EbeatsTime day (Ebeats ebeats)
 
-diffEbeatsTime :: EbeatsTime 
-               -> EbeatsTime 
+diffEbeatsTime :: EbeatsTime
+               -> EbeatsTime
                -> Ebeats -- ^ Note that Ebeats is being used to measure the difference between "EbeatsTime"s.
--- ^ diffEbeatsTime a b = a - b   -- Like diffUTCTime. 
+-- ^ diffEbeatsTime a b = a - b   -- Like diffUTCTime.
 diffEbeatsTime (EbeatsTime day0 (Ebeats ebeats0)) (EbeatsTime day1 (Ebeats ebeats1))
                =  let total0 = (fromIntegral $ day0 * 1000 :: Fixed E2) + ebeats0
                       total1 = (fromIntegral $ day1 * 1000 :: Fixed E2) + ebeats1
                   in Ebeats (total0 - total1)
-                  
+
 addEbeatsTime                                      :: Ebeats -- ^ Note that Ebeats is being used as the measure between "EbeatsTime"s.
-                                                   -> EbeatsTime 
                                                    -> EbeatsTime
--- ^ addEbeatsTime a b = a + b -- Like addUTCTime. 
+                                                   -> EbeatsTime
+-- ^ addEbeatsTime a b = a + b -- Like addUTCTime.
 addEbeatsTime (Ebeats a) (EbeatsTime d (Ebeats e)) =  let (newDays, newEbeats) = divMod' (a + e) 1000
                                                       in EbeatsTime (d + newDays) (Ebeats newEbeats)
 
