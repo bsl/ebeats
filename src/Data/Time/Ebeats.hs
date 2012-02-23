@@ -45,24 +45,24 @@ getEbeats = toEbeats `fmap` getCurrentTime
 
 -- Can you spot the difference in coding styles?:
 getEbeatsTime :: IO EbeatsTime
-getEbeatsTime = do ebeats <- getEbeats
+getEbeatsTime = do ebs <- getEbeats
                    now <- getCurrentTime
                    let day = toModifiedJulianDay $ utctDay now
-                   return $ EbeatsTime day ebeats
+                   return $ EbeatsTime day ebs
 
 
 toEbeats :: UTCTime -> Ebeats
 toEbeats utct =
     let TimeOfDay h m s = timeToTimeOfDay $ utctDayTime utct
-        !ebeats         = realToFrac $ s * 5/432 + realToFrac m * 25/36 + realToFrac h * 125/3
-    in Ebeats ebeats
+        !ebs            = realToFrac $ s * 5/432 + realToFrac m * 25/36 + realToFrac h * 125/3
+    in Ebeats ebs
 
 toEbeatsTime :: UTCTime -> EbeatsTime
 toEbeatsTime utct =
     let TimeOfDay h m s = timeToTimeOfDay $ utctDayTime utct
-        !ebeats         = realToFrac $ s * 5/432 + realToFrac m * 25/36 + realToFrac h * 125/3
+        !ebs            = realToFrac $ s * 5/432 + realToFrac m * 25/36 + realToFrac h * 125/3
         day             = toModifiedJulianDay $ utctDay utct
-    in EbeatsTime day (Ebeats ebeats)
+    in EbeatsTime day (Ebeats ebs)
 
 diffEbeatsTime :: EbeatsTime
                -> EbeatsTime
